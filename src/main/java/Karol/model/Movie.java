@@ -9,6 +9,7 @@ public class Movie {
     private String director;
     private String description;
     private Genere genere;
+
     public Movie() {
     }
 

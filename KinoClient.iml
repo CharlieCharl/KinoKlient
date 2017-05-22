@@ -56,5 +56,6 @@
     <orderEntry type="library" name="Maven: org.glassfish.hk2.external:javax.inject:2.5.0-b36" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.hk2:hk2-locator:2.5.0-b36" level="project" />
     <orderEntry type="library" name="Maven: org.javassist:javassist:3.20.0-GA" level="project" />
+    <orderEntry type="library" name="Maven: org.vaadin.addons:imageviewer:0.6.0.v8" level="project" />
   </component>
 </module>

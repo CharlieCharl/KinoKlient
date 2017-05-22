@@ -79,6 +79,12 @@
 			<version>2.26-b03</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>imageviewer</artifactId>
+			<version>0.6.0.v8</version>
+		</dependency>
+
 
 	</dependencies>
 

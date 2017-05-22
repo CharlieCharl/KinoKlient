@@ -1,20 +1,16 @@
 package Karol;
 
-import javax.imageio.ImageIO;
 import javax.servlet.annotation.WebServlet;
 
+import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.*;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.CompletableFuture;
 
@@ -25,38 +21,29 @@ import java.util.concurrent.CompletableFuture;
  * The UI is initialized using {@link #init(VaadinRequest)}. This method is intended to be
         * overridden to add component to the user interface and initialize non-component functionality.
         */
+@Push()
 @Theme("mytheme")
 public class MyUI extends UI {
 
-    Image image;
+    private Image image;
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         final VerticalLayout layout = new VerticalLayout();
         Label label = new Label();
-        Button button = new Button("Click Me");
-       image = new Image();
-        button.addClickListener( e -> {
-         DataProvider dataProvider = new DataProvider();//  layout.addComponent(new Label(dataProvider.getMovieByTitle("Obcy:Przymierze").getDescription()));
-           // label.setValue(dataProvider.getMovieByTitle("Obcy:Przymierze").getDescription());
+        image = new Image();
 
-            CompletableFuture.supplyAsync(() -> dataProvider.downloadImage("Obcy:Przymierze"))
-                    .thenApply(x ->{
-                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                        try {
-                            ImageIO.write(x, "png", bos);
-                            StreamResource resource = new StreamResource(new ByteArrayInputStream(bos.toByteArray()),"cokolwiek");
-                            image.setSource(resource);
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
-                        }
-
-                    });
-        });
-
-        layout.addComponents(button, label, image);
-       // setContent(new MainUIController());
+        DataProvider dataProvider = new DataProvider();//  layout.addComponent(new Label(dataProvider.getMovieByTitle("Obcy:Przymierze").getDescription()));
+        CompletableFuture.supplyAsync(() -> dataProvider.downloadImageAsStream("Obcy:Przymierze"))
+                .thenAccept((InputStream x) -> {
+                    image.setSource(new StreamResource((StreamResource.StreamSource) () -> x, ""));
+                    //UI.getCurrent().push();
+                    image.requestRepaint();
+                });
+        layout.addComponents(label, image);
+       // setContent(layout);
+        setContent(new MainUIController());
     }
-
 
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
